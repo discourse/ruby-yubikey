@@ -27,8 +27,8 @@ describe 'Yubikey::OTP::Verify' do
     hmac = Yubikey::OTP::Verify::generate_hmac(ok_response, @key)
     @mock_http_get.should_receive(:body).and_return("h=#{hmac}\n#{ok_response}")
     otp = Yubikey::OTP::Verify.new(:api_id => @id, :api_key => @key, :otp => @otp, :nonce => @nonce)
-    otp.valid?.should == true
-    otp.replayed?.should == false
+    expect(otp.valid?).to eq true
+    expect(otp.replayed?).to eq false
   end
   
   it 'should verify a replayed OTP' do
@@ -36,8 +36,8 @@ describe 'Yubikey::OTP::Verify' do
     hmac = Yubikey::OTP::Verify::generate_hmac(replayed_response, @key)
     @mock_http_get.should_receive(:body).and_return("h=#{hmac}\n#{replayed_response}")
     otp = Yubikey::OTP::Verify.new(:api_id => @id, :api_key => @key, :otp => @otp, :nonce => @nonce)
-    otp.valid?.should == false
-    otp.replayed?.should == true
+    expect(otp.valid?).to eq false
+    expect(otp.replayed?).to eq true
   end
   
   it 'should raise on invalid OTP' do
@@ -48,12 +48,12 @@ describe 'Yubikey::OTP::Verify' do
   end
 
   it 'should generate a correct hmac' do
-    Yubikey::OTP::Verify::generate_hmac(@response, @key).should == 'sZqbbsXL5WIdqLNmr19/eq6acSM='
+    expect(Yubikey::OTP::Verify::generate_hmac(@response, @key)).to eq 'sZqbbsXL5WIdqLNmr19/eq6acSM='
   end
 
   it 'should raise on invalid parameters' do
-    expect{ Yubikey::OTP::Verify.new({}) }.to raise_error(ArgumentError, "Must supply API ID")
-    expect{ Yubikey::OTP::Verify.new({:api_id => 'foo'}) }.to raise_error(ArgumentError, "Must supply API Key")
+    expect { Yubikey::OTP::Verify.new({}) }.to raise_error(ArgumentError, "Must supply API ID")
+    expect { Yubikey::OTP::Verify.new({:api_id => 'foo'}) }.to raise_error(ArgumentError, "Must supply API Key")
   end
 
   context "with module configuration" do
@@ -73,8 +73,8 @@ describe 'Yubikey::OTP::Verify' do
       hmac = Yubikey::OTP::Verify::generate_hmac(ok_response, @key)
       @mock_http_get.should_receive(:body).and_return("h=#{hmac}\n#{ok_response}")
       otp = Yubikey::OTP::Verify.new(:otp => @otp, :nonce => @nonce)
-      otp.valid?.should == true
-      otp.replayed?.should == false
+      expect(otp.valid?).to eq true
+      expect(otp.replayed?).to eq false
     end
   end
 
