@@ -20,9 +20,13 @@ module Yubikey
       @url = args[:url] || Yubikey.url
       @nonce = args[:nonce] || OTP::Verify.generate_nonce(32)
       
-      @certificate_chain = args[:certificate_chain] || Yubikey.certificate_chain
-      @cert_store = OpenSSL::X509::Store.new
-      @cert_store.add_file @certificate_chain
+      @cert_store = args[:certificate_store] || OpenSSL::X509::Store.new.tap do |store|
+         if args[:certificate_chain] == :system
+            store.set_default_paths
+         else
+            store.add_file(args[:certificate_chain] || Yubikey.certificate_chain)
+         end
+      end
       
       verify(args)
     end

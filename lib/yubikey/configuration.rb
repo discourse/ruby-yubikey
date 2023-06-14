@@ -7,6 +7,7 @@ module Yubikey
       :url,
       :api_key,
       :certificate_chain,
+      :certificate_store,
     ].freeze
 
     # By default, we want to point to Yubicloud

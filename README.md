@@ -42,6 +42,26 @@ rescue Yubikey::OTP::InvalidOTPError
 end
 ```
 
+## TLS Verification
+By default the library enforces a pinned certificate (an AWS Root).
+
+A different configuration can be driven by passing:
+* `:certificate_store` => a custom `OpenSSL::X509::Store`
+* `:certificate_chain` => a path to a certificate file
+* `:certificate_chain` => `:system` (which tells the library to use the system defaults)
+
+```ruby
+otp = Yubikey::OTP::Verify.new(:api_id => 1234,
+                               :api_key => 'NiSwGZBQ0gTbwXbRGWAf4kM5xXg=',
+                               :otp => 'dteffujehknhfjbrjnlnldnhcujvddbikngjrtgh',
+                               :certificate_chain => :system)
+
+otp = Yubikey::OTP::Verify.new(:api_id => 1234,
+                               :api_key => 'NiSwGZBQ0gTbwXbRGWAf4kM5xXg=',
+                               :otp => 'dteffujehknhfjbrjnlnldnhcujvddbikngjrtgh',
+                               :certificate_chain => custom_store)
+```
+
 ## Install
 
 Yubikey is available as a gem, to install it just install the gem:
